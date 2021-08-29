@@ -1,0 +1,5 @@
+GET http://localhost:8000/get_doc HTTP/1.1
+content-type: application/json
+Accept: application/json, text/plain, */*
+Accept-Encoding: gzip, deflate, br
+Accept-Language: en-US,en;q=0.9,fr;q=0.8
