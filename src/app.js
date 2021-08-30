@@ -5,6 +5,10 @@ const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const MemcachedStore = require('connect-memcached')(session);
 
+const GoogleDriveApi = require('./services/gdrive');
+const { createCache } = require('./services/cache');
+const Db = require('./db/config');
+
 /**
  * Routes
  */
@@ -13,7 +17,28 @@ const gDriveRoutes = require('./routes/gdrive');
 
 const config = dotenv.config();
 
+const cache = createCache();
+
 const app = express();
+
+/**
+ * Cache database handle
+ */
+const dbHandle = new Db();
+cache.set('db', dbHandle);
+
+/**
+ * Refresh spreadsheet if saved version is outdated
+ */
+const gDrive = new GoogleDriveApi();
+gDrive.initialize().then(async (instance) => {
+  cache.set('gDriveInstance', instance);
+  const isUpdated = await gDrive.hasSpreadsheetBeenUpdated();
+  if (isUpdated) {
+    // Drop and create db with latest data
+    gDrive.refreshSpreadsheet();
+  }
+});
 
 /**
  * Session middleware
@@ -38,7 +63,10 @@ app.use(
   })
 );
 
+/**
+ * Configure routes
+ */
 app.use('/', indexRoutes);
-app.use('/get_doc', gDriveRoutes);
+app.use('/data', gDriveRoutes);
 
 module.exports = app;

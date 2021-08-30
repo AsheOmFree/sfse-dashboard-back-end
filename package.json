@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/server.js",
+    "start": "nodemon —-use_strict src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -15,8 +15,12 @@
     "connect-memcached": "^1.0.0",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
+    "exceljs": "^4.3.0",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.1",
+    "node-cache": "^5.1.2",
     "node-google-drive": "^1.1.2",
     "nodemon": "^2.0.12",
     "sqlite3": "^5.0.2"
